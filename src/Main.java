@@ -1,7 +1,18 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        (new Thread(new Generator())).start();
+        List<Elevator> elevators = List.of(new Elevator(1), new Elevator(2));
+        Controller controller = new Controller(elevators);
+        Generator generator = new Generator(controller);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        elevators.forEach(executorService::execute);
+
+        executorService.execute(generator);
     }
 }
